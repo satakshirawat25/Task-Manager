@@ -1,47 +1,75 @@
-import React from 'react'
-import {BrowserRouter as Router,Routes,Route} from "react-router-dom"
-import Dashboard from './pages/Admin/Dashboard'
-import Login from './pages/Auth/Login'
+import React, { useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
+import Dashboard from "./pages/Admin/Dashboard";
+import Login from "./pages/Auth/Login";
 // import SignUp from './pages/Auth/Signup'
-import CreateTask from './pages/Admin/CreateTask'
-import ManageTasks from './pages/Admin/ManageTasks'
-import ManageUsers from './pages/Admin/ManageUsers'
-import UserDashboard from './pages/User/UserDashboard'
-import MyTask from './pages/User/MyTasks'
-import MyTasks from './pages/User/MyTasks'
-import ViewTaskDetails from './pages/User/ViewTaskDetails'
-import PrivateRoute from './routes/PrivateRoute'
-import  SignUp  from './pages/Auth/SignUp.jsx'
+import CreateTask from "./pages/Admin/CreateTask";
+import ManageTasks from "./pages/Admin/ManageTasks";
+import ManageUsers from "./pages/Admin/ManageUsers";
+import UserDashboard from "./pages/User/UserDashboard";
+import MyTask from "./pages/User/MyTasks";
+import MyTasks from "./pages/User/MyTasks";
+import ViewTaskDetails from "./pages/User/ViewTaskDetails";
+import PrivateRoute from "./routes/PrivateRoute";
+import SignUp from "./pages/Auth/SignUp.jsx";
+// import { UserProvider } from "./context/userContext.jsx";
+import { UserContext, UserProvider } from "./context/UserContext.jsx";
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/signUp" element={<SignUp/>}/>
+    <UserProvider>
+      <div>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signUp" element={<SignUp />} />
 
-          {/* {admin routes} */}
-          <Route element={<PrivateRoute allowedRoles={["admin"]}/>}>
-          <Route  path="/admin/dashboard" element={<Dashboard/>}/>
-          <Route  path="/admin/tasks" element={<ManageTasks/>}/>
-          <Route  path="/admin/create-task" element={<CreateTask/>}/>
-          <Route  path="/admin/users" element={<ManageUsers/>}/>
-         
-          </Route>
-
-          {/* {userRoute} */}
-           <Route element={<PrivateRoute allowedRoles={["admin"]}/>}>
-          <Route  path="/user/dashboard" element={<UserDashboard/>}/>
-          <Route  path="/user/tasks" element={<MyTasks/>}/>
-          <Route  path="/user/task-details/:id" element={<ViewTaskDetails/>}/>
+            {/* {admin routes} */}
+            <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/tasks" element={<ManageTasks />} />
+              <Route path="/admin/create-task" element={<CreateTask />} />
+              <Route path="/admin/users" element={<ManageUsers />} />
             </Route>
 
-        </Routes>
-      </Router>
-      
-    </div>
-  )
-}
+            {/* {userRoute} */}
+            <Route element={<PrivateRoute allowedRoles={["member"]} />}>
+              <Route path="/user/dashboard" element={<UserDashboard />} />
+              <Route path="/user/tasks" element={<MyTasks />} />
+              <Route
+                path="/user/task-details/:id"
+                element={<ViewTaskDetails />}
+              />
+            </Route>
+            {/* "default route" */}
+            <Route path="/" element={<Root />} />
+          </Routes>
+        </Router>
+      </div>
+    </UserProvider>
+  );
+};
 
-export default App
+export default App;
+
+export const Root = () => {
+  const { user, loading } = useContext(UserContext);
+
+  if (loading) return <Outlet />;
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return user.role === "admin" ? (
+    <Navigate to="/admin/dashboard" />
+  ) : (
+    <Navigate to="/user/dashboard" />
+  );
+};

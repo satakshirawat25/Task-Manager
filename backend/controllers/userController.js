@@ -1,6 +1,6 @@
 import { Task } from "../models/Task.js";
 import { User } from "../models/User.js";
-import bcrypt from "bcryptjs";
+
 
 export const getUsers = async(req,res)=>{
     try{
