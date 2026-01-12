@@ -2,7 +2,7 @@ import React from 'react'
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom"
 import Dashboard from './pages/Admin/Dashboard'
 import Login from './pages/Auth/Login'
-import SignUp from './pages/Auth/Signup'
+// import SignUp from './pages/Auth/Signup'
 import CreateTask from './pages/Admin/CreateTask'
 import ManageTasks from './pages/Admin/ManageTasks'
 import ManageUsers from './pages/Admin/ManageUsers'
@@ -11,6 +11,7 @@ import MyTask from './pages/User/MyTasks'
 import MyTasks from './pages/User/MyTasks'
 import ViewTaskDetails from './pages/User/ViewTaskDetails'
 import PrivateRoute from './routes/PrivateRoute'
+import  SignUp  from './pages/Auth/SignUp.jsx'
 
 const App = () => {
   return (
