@@ -1,4 +1,6 @@
 import express from 'express'
+import { createTask, deleteTask, getDashboardData, getTasks, getTasksById, getUserDashboardData, updateTask, updateTaskCheckList, updateTaskStatus } from '../controllers/taskController.js'
+import { adminOnly, protect } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
@@ -7,11 +9,11 @@ const router = express.Router()
 router.get("/dashboard-data",protect,getDashboardData)
 router.get("/user-dashboard-data",protect,getUserDashboardData)
 router.get("/",protect,getTasks)
-router.get("/:id",protect,getTasksByID)
-router.get("/",protect,adminOnly,createTask)
-router.get("/:id",protect,updateTask)
-router.get("/:id",protect,adminOnly.deleteTask)
-router.get("/:id/status",protect,updateTaskStatus,)
-router.get("/:id/todo",protect,updateTaskCheckList)
+router.get("/:id",protect,getTasksById)
+router.post("/",protect,adminOnly,createTask)
+router.put("/:id",protect,updateTask)
+router.delete("/:id",protect,adminOnly,deleteTask)
+router.put("/:id/status",protect,updateTaskStatus)
+router.put("/:id/todo",protect,updateTaskCheckList)
 
 export default router
